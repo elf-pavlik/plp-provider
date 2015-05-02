@@ -132,13 +132,17 @@ daemon.get('/:uuid', function(req, res){
 /**
  * Server-Sent Events
  */
-daemon.get('/:uuid/.sse/', sse, function(req, res){
-
-  // Sends a SSE every 5 seconds on a single connection.
-  setInterval(function() {
-    res.sse('data:' + req.uri + ' | ' + new Date().toString()  + ' \n\n');
-  }, 1000);
-
+daemon.get('/:uuid/.sse', sse, function(req, res){
+  storage.get(req.uri.replace('/.sse', ''))  // -> doc
+  .then(function(doc){
+    // Sends a SSE every 5 seconds on a single connection.
+    setInterval(function() {
+      res.sse('data: ' + JSON.stringify(doc) + '\n\n');
+    }, 1000);
+  })
+  .catch(function(err){
+    res.send(statusCode(err), err.message);
+  });
 });
 
 /**
