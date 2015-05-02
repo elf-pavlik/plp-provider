@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 
 var serveStatic = require('serve-static');
 var hbs = require('hbs');
+var sse = require('server-sent-events');
 
 var Promise = require('es6-promise').Promise;
 var _ = require('lodash');
@@ -126,6 +127,18 @@ daemon.get('/:uuid', function(req, res){
   .catch(function(err){
     res.send(statusCode(err), err.message);
   });
+});
+
+/**
+ * Server-Sent Events
+ */
+daemon.get('/:uuid/.sse/', sse, function(req, res){
+
+  // Sends a SSE every 5 seconds on a single connection.
+  setInterval(function() {
+    res.sse('data:' + req.uri + ' | ' + new Date().toString()  + ' \n\n');
+  }, 1000);
+
 });
 
 /**
