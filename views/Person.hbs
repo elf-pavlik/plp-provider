@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-  <title>elf Pavlik | worldwide elves</title>
+  <title>{{name}} | worldwide elves</title>
 
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="{{name}}" />
@@ -18,6 +18,13 @@
   <link rel="stylesheet" href="/assets/screen.css" />
   <script src="/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+  {{#if link}}
+    {{#each link}}
+      <link rel="{{rel}}" href="{{href}}" />
+    {{/each}}
+  {{/if}}
 
 </head>
 <body>
