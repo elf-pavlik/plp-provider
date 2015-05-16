@@ -69,7 +69,7 @@
             </a>
           </li>
         {{/if}}
-        {{#if homeLocation}}
+        {{#if currentLocation}}
           <li rel="currentLocation">
             <a typeof="{{j currentLocation.type}}" href="{{currentLocation.id}}">
               <span property="name">{{currentLocation.name}}</span>
@@ -79,7 +79,7 @@
       </ul>
       {{#if sec:publicKey}}
         <ul>
-          <li><span class="glyphicon glyphicon-certificate"></span></li>
+          <li><span class="glyphicon glyphicon-lock"></span></li>
           {{#each sec:publicKey}}
           <li>
             <a property="sec:publicKey" href="{{id}}"><span property="name">{{name}}</span></a>
@@ -107,6 +107,23 @@
           {{/each}}
         </ul>
       {{/if}}
+      {{#if cco:skill}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-certificate"></span>
+            skills
+          </h2>
+          <ul rel="cco:skill" class="panel-body">
+            {{#each cco:skill}}
+            <li>
+              <a href="{{id}}" target="dbpedia">
+                <span property="name">{{name}}</span>
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
       {{#if cco:habit}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
@@ -129,8 +146,8 @@
       {{#if foaf:currentProject}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-wrench"></span>
-            projects
+            <span class="glyphicon glyphicon-cog"></span>
+            portfolio
           </h2>
           <ul rel="foaf:currentProject" class="panel-body">
             {{#each foaf:currentProject}}
@@ -176,7 +193,7 @@
       {{#if memberOf}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-asterisk"></span>
+            <span class="glyphicon glyphicon-magnet"></span>
             affiliations
           </h2>
           <ul rev="member" class="panel-body">
@@ -192,7 +209,7 @@
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-calendar"></span>
-            events
+            calendar
           </h2>
           <ul rev="attendee" class="panel-body">
             {{#each attendeeIn}}
@@ -207,7 +224,7 @@
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-map-marker"></span>
-            places
+            map
           </h2>
           <ul rel="visited" class="panel-body">
             {{#each visited}}
@@ -221,7 +238,7 @@
       {{#if subjectOf}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-screenshot"></span>
+            <span class="glyphicon glyphicon-record"></span>
             press
           </h2>
           <ul rev="about" class="panel-body">
