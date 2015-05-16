@@ -224,7 +224,7 @@ function restricted(fn) {
 function addUri() {
   return function(req, res, next) {
     if(req.method !== 'POST') {
-      req.uri = 'http://' + config.domain + req.path;
+      req.uri = 'https://' + config.domain + req.path;
     }
     next();
   };
