@@ -158,6 +158,21 @@
           </ul>
         </div>
       {{/if}}
+      {{#if task}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-tasks"></span>
+            taskboard
+          </h2>
+          <ul rel="task" class="panel-body">
+            {{#each task}}
+            <li>
+              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
       {{#if seeks}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
