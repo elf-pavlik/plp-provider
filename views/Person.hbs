@@ -43,8 +43,6 @@
         <p property="description">{{description}}</p>
       </div>
     {{/if}}
-  </div>
-  <div class="row">
     <div class="col-md-3">
       <ul id="b-day">
         {{#if birthDate}}
@@ -107,6 +105,42 @@
           {{/each}}
         </ul>
       {{/if}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      {{#if memberOf}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-magnet"></span>
+            affiliations
+          </h2>
+          <ul rev="member" class="panel-body">
+            {{#each memberOf}}
+            <li>
+              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    </div>
+    <div class="col-md-4">
+      {{#if foaf:currentProject}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-cog"></span>
+            portfolio
+          </h2>
+          <ul rel="foaf:currentProject" class="panel-body">
+            {{#each foaf:currentProject}}
+            <li>
+              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
       {{#if cco:skill}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
@@ -136,38 +170,6 @@
               <a rel="cco:topic" href="{{cco:topic.id}}" target="dbpedia">
                 <span property="name">{{cco:topic.name}}</span>
               </a>
-            </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
-    </div>
-    <div class="col-md-4">
-      {{#if foaf:currentProject}}
-        <div class="panel panel-default">
-          <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-cog"></span>
-            portfolio
-          </h2>
-          <ul rel="foaf:currentProject" class="panel-body">
-            {{#each foaf:currentProject}}
-            <li>
-              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
-            </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
-      {{#if task}}
-        <div class="panel panel-default">
-          <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-tasks"></span>
-            taskboard
-          </h2>
-          <ul rel="task" class="panel-body">
-            {{#each task}}
-            <li>
-              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
             </li>
             {{/each}}
           </ul>
@@ -205,14 +207,14 @@
       {{/if}}
     </div>
     <div class="col-md-5">
-      {{#if memberOf}}
+      {{#if task}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-magnet"></span>
-            affiliations
+            <span class="glyphicon glyphicon-tasks"></span>
+            taskboard
           </h2>
-          <ul rev="member" class="panel-body">
-            {{#each memberOf}}
+          <ul rel="task" class="panel-body">
+            {{#each task}}
             <li>
               <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
             </li>
