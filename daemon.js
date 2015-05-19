@@ -114,7 +114,7 @@ daemon.post('/auth/logout', function(req, res){
   res.send(200);
 });
 
-daemon.get('/:uuid', function(req, res){
+daemon.get(/[/]$/, function(req, res){
   storage.get(req.uri.replace(/\/$/, ''))          // -> doc
   .then(function(doc){
     res.format({
@@ -133,6 +133,10 @@ daemon.get('/:uuid', function(req, res){
         });
       },
       'application/json': function(){
+        res.type('application/ld+json');
+        res.send(JSON.stringify(doc));
+      },
+      'application/activity+json': function(){
         res.type('application/ld+json');
         res.send(JSON.stringify(doc));
       },
