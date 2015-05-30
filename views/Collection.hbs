@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html
+  vocab="http://schema.org/"
+  prefix="cco: http://purl.org/ontology/cco/core# foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# sec: https://w3id.org/security# doap: http://usefulinc.com/ns/doap#"
+  >
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <title>{{name}} | worldwide elves</title>
+
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="{{name}}" />
+  <meta property="og:description" content="{{description}}" />
+  <meta property="og:url" content="{{id}}/" />
+  <meta property="og:image" content="{{image}}" />
+
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="/assets/screen.css" />
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+  {{#if link}}
+    {{#each link}}
+      <link rel="{{rel}}" href="{{href}}" />
+    {{/each}}
+  {{/if}}
+
+</head>
+<body>
+<div about="{{id}}" typeof="{{j type}}" class="container">
+  <div class="row">
+    <div id="main" class="col-md-3">
+    </div>
+    {{#if description}}
+      <div class="col-md-6">
+        <p property="description">{{description}}</p>
+      </div>
+    {{/if}}
+    <div class="col-md-3">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-9">
+      {{#if items}}
+        <ul rel="items">
+          {{#each items}}
+          <li>
+            <a id="{{uuid}}" typeof="{{j type}}" href="{{id}}">
+              <span >{{actor.displayName}}</span>,
+              <span >{{object.displayName}}</span>
+            </a>
+          </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
+  </div>
+  <footer>
+    powered by open source
+    <a typeof="SoftwareApplication" href="https://github.com/elf-pavlik/webprofiled">
+      <span property="name">webprofiled</span>
+    </a>
+  </footer>
+</div>
+</body>
+</html>

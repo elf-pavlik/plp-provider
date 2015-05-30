@@ -55,6 +55,10 @@ hbs.registerHelper('j', function(val){
   }
 });
 
+hbs.registerHelper('dt', function(val){
+  return new Date(val).toDateString();
+});
+
 /*
  * no favicon for now!
  */
@@ -119,10 +123,18 @@ daemon.get(/[/]$/, function(req, res){
   .then(function(doc){
     res.format({
       'text/html': function(){
-        var type = doc.type;
+        var type = doc.type || doc['@type'];
         // handle case of array
         if(typeof type == 'object') type = type[0];
-        res.render(type, doc);
+        if(doc.outbox) {
+          storage.get(doc.outbox)
+          .then(function(outbox){
+            doc.outbox = outbox;
+            res.render(type, doc);
+          });
+        } else {
+          res.render(type, doc);
+        }
       },
       'text/turtle': function(){
         rdf.parseJsonLd(doc, function(graph, error) {
