@@ -109,21 +109,6 @@
   </div>
   <div class="row">
     <div class="col-md-3">
-      {{#if memberOf}}
-        <div class="panel panel-default">
-          <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-magnet"></span>
-            affiliations
-          </h2>
-          <ul rev="member" class="panel-body">
-            {{#each memberOf}}
-            <li>
-              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
-            </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
     </div>
     <div class="col-md-4">
       {{#if foaf:currentProject}}
@@ -141,11 +126,26 @@
           </ul>
         </div>
       {{/if}}
+      {{#if task}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-tasks"></span>
+            taskboard
+          </h2>
+          <ul rel="task" class="panel-body">
+            {{#each task}}
+            <li>
+              <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
       {{#if cco:skill}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-certificate"></span>
-            skills
+            skill set
           </h2>
           <ul rel="cco:skill" class="panel-body">
             {{#each cco:skill}}
@@ -207,14 +207,14 @@
       {{/if}}
     </div>
     <div class="col-md-5">
-      {{#if task}}
+      {{#if memberOf}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-tasks"></span>
-            taskboard
+            <span class="glyphicon glyphicon-asterisk"></span>
+            network
           </h2>
-          <ul rel="task" class="panel-body">
-            {{#each task}}
+          <ul rev="member" class="panel-body">
+            {{#each memberOf}}
             <li>
               <a typeof="{{j type}}" href="{{id}}"><span property="name">{{name}}</span></a>
             </li>
@@ -256,7 +256,7 @@
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-record"></span>
-            press
+            press coverage
           </h2>
           <ul rev="about" class="panel-body">
             {{#each subjectOf}}
