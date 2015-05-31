@@ -44,22 +44,15 @@
       </div>
     {{/if}}
     <div class="col-md-3">
-      <ul id="b-day">
+      <ul id="b-day" class="list-inline">
         {{#if birthDate}}
           <li>
             <span class="glyphicon glyphicon-cloud-download"></span>
             <span property="birthDate">{{birthDate}}</span>
           </li>
         {{/if}}
-        {{#if birthDate}}
-          <li>
-            <span class="glyphicon glyphicon-forward"></span>
-            <span property="birthDate">{{birthDayParty}}</span>
-            <span class="glyphicon glyphicon-fire"></span>
-          </li>
-        {{/if}}
       </ul>
-      <ul id="geo">
+      <ul class="list-inline">
         {{#if homeLocation}}
           <li rel="homeLocation">
             <a typeof="{{j homeLocation.type}}" href="{{homeLocation.id}}">
@@ -76,7 +69,7 @@
         {{/if}}
       </ul>
       {{#if sec:publicKey}}
-        <ul>
+        <ul class="list-inline">
           <li><span class="glyphicon glyphicon-lock"></span></li>
           {{#each sec:publicKey}}
           <li>
@@ -86,7 +79,7 @@
         </ul>
       {{/if}}
       {{#if contactPoint}}
-        <ul>
+        <ul class="list-inline">
           <li><span class="glyphicon glyphicon-comment"></span></li>
           {{#each contactPoint}}
           <li>
@@ -96,7 +89,7 @@
         </ul>
       {{/if}}
       {{#if sameAs}}
-        <ul>
+        <ul class="list-inline">
           <li><span class="glyphicon glyphicon-user"></span></li>
           {{#each sameAs}}
           <li>
@@ -114,12 +107,13 @@
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-flash"></span>
             log
+            <a class="more glyphicon glyphicon-arrow-right" href="{{id outbox}}"> </a>
           </h2>
           <ul rev="actor" class="panel-body">
             {{#if outbox.items}}
             {{#each outbox.items}}
             <li>
-              <a typeof="{{j type}}" href="{{id}}">{{dt startTime}}</a>
+              <a typeof="{{j type}}" href="{{id this}}">{{dt startTime}}</a>
             </li>
             {{/each}}
             {{/if}}
@@ -128,6 +122,23 @@
       {{/if}}
     </div>
     <div class="col-md-4">
+      {{#if cco:interest}}
+        <div class="panel panel-default">
+          <h2 class="panel-heading">
+            <span class="glyphicon glyphicon-tree-deciduous"></span>
+            character
+          </h2>
+          <ul rel="cco:interest" class="panel-body">
+            {{#each cco:interest}}
+            <li>
+              <a href="{{id}}" target="dbpedia">
+                <span property="name">{{name}}</span>
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
       {{#if foaf:currentProject}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
@@ -158,40 +169,6 @@
           </ul>
         </div>
       {{/if}}
-      {{#if cco:skill}}
-        <div class="panel panel-default">
-          <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-certificate"></span>
-            skill set
-          </h2>
-          <ul rel="cco:skill" class="panel-body">
-            {{#each cco:skill}}
-            <li>
-              <a href="{{id}}" target="dbpedia">
-                <span property="name">{{name}}</span>
-              </a>
-            </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
-      {{#if cco:habit}}
-        <div class="panel panel-default">
-          <h2 class="panel-heading">
-            <span class="glyphicon glyphicon-repeat"></span>
-            habits
-          </h2>
-          <ul rel="cco:habit" class="panel-body">
-            {{#each cco:habit}}
-            <li typeof="{{j type}}">
-              <a rel="cco:topic" href="{{cco:topic.id}}" target="dbpedia">
-                <span property="name">{{cco:topic.name}}</span>
-              </a>
-            </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
       {{#if seeks}}
         <div class="panel panel-default">
           <h2 class="panel-heading">
@@ -211,7 +188,7 @@
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-briefcase"></span>
-            equipment
+            backpack
           </h2>
           <ul rel="owns" class="panel-body">
             {{#each owns}}
@@ -273,7 +250,7 @@
         <div class="panel panel-default">
           <h2 class="panel-heading">
             <span class="glyphicon glyphicon-record"></span>
-            press coverage
+            press
           </h2>
           <ul rev="about" class="panel-body">
             {{#each subjectOf}}

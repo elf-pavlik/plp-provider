@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-  <title>{{name}} | worldwide elves</title>
+  <title>{{author.name}} | worldwide elves</title>
 
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="{{name}}" />
@@ -31,27 +31,22 @@
 <div about="{{id}}" typeof="{{j type}}" class="container">
   <div class="row">
     <div id="main" class="col-md-3">
-    </div>
-    {{#if description}}
-      <div class="col-md-6">
-        <p property="description">{{description}}</p>
-      </div>
-    {{/if}}
-    <div class="col-md-3">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
+      {{#if author}}
+        <h1 property="name">{{author.name}}</h1>
+        <img property="image" src="{{author.image}}" />
+      {{/if}}
     </div>
     <div class="col-md-9">
       {{#if items}}
-        <ul rel="items">
+        <ul rel="items" class="list-unstyled">
           {{#each items}}
           <li>
-            <a id="{{uuid}}" typeof="{{j type}}" href="{{id}}">
-              <span >{{actor.displayName}}</span>,
-              <span >{{object.displayName}}</span>
-            </a>
+            <div  class="glyphicon glyphicon-comment">
+              <a id="{{uuid}}" typeof="{{j type}}" href="{{id}}">
+                <span >{{dt startTime}}</span>
+              </a>:
+              <span class="glyphicon glyphicon-exclamation-sign">{{object.displayName}}</span>
+            </div>
           </li>
           {{/each}}
         </ul>

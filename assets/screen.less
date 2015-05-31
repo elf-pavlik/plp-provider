@@ -1,7 +1,8 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
 
-ul {
+.panel ul {
   .list-inline;
+  margin-left: 1em;
 }
 
 body {
@@ -34,10 +35,6 @@ body {
   border-radius: 5px;
 }
 
-#main #geo {
-  .list-inline;
-}
-
 [property="description"] {
   font-size: 1.75em;
   padding: 0.5em;
@@ -60,9 +57,19 @@ body {
   padding: 0.5em;
 }
 
-.panel a {
+.panel-body a {
   .badge;
   margin: 0.5em 0;
+}
+
+a.more {
+  float: right;
+  color: black !important;
+}
+
+a.more:hover {
+  color: gray !important;
+  text-decoration: none !important;
 }
 
 footer {

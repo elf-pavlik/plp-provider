@@ -47,6 +47,10 @@ daemon.use(addUri());
 daemon.use(serveStatic('.'));
 daemon.set('view engine', 'hbs');
 
+hbs.registerHelper('id', function(val){
+  return val['@id'];
+});
+
 hbs.registerHelper('j', function(val){
   if(val && val.join){
     return val.join(" ");
@@ -126,10 +130,11 @@ daemon.get(/[/]$/, function(req, res){
         var type = doc.type || doc['@type'];
         // handle case of array
         if(typeof type == 'object') type = type[0];
-        if(doc.outbox) {
-          storage.get(doc.outbox)
-          .then(function(outbox){
-            doc.outbox = outbox;
+        if(doc.outbox || doc.author) {
+          var sub = doc.outbox ? 'outbox' : 'author';
+          storage.get(doc[sub])
+          .then(function(subDoc){
+            doc[sub] = subDoc;
             res.render(type, doc);
           });
         } else {
