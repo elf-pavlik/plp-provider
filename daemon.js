@@ -47,9 +47,21 @@ daemon.use(addUri());
 daemon.use(serveStatic('.'));
 daemon.set('view engine', 'hbs');
 
+hbs.registerPartials(__dirname + '/views/partials');
+
 hbs.registerHelper('id', function(val){
-  return val['@id'];
+  return val['@id'] || val.id;
 });
+
+hbs.registerHelper('t', function(val){
+  if(!val.type && val['@type']) val.type = val['@type'];
+  if(val.type && val.type.join){
+    return val.type.join(" ");
+  } else {
+    return val.type;
+  }
+});
+
 
 hbs.registerHelper('j', function(val){
   if(val && val.join){
@@ -130,13 +142,22 @@ daemon.get(/[/]$/, function(req, res){
         var type = doc.type || doc['@type'];
         // handle case of array
         if(typeof type == 'object') type = type[0];
-        if(doc.outbox || doc.author) {
-          var sub = doc.outbox ? 'outbox' : 'author';
-          storage.get(doc[sub])
-          .then(function(subDoc){
-            doc[sub] = subDoc;
+        if(doc.resource) {
+          storage.get(doc.resource)
+          .then(function(sub){
+            doc.resource = sub;
             res.render(type, doc);
           });
+        } else if(doc.collection) {
+          Promise.all(doc.collection.map(storage.get))
+          .then(function(matrix){
+            doc.matrix = {};
+            _.each(matrix, function(collection){
+              var key = collection.rel || collection.rev;
+              doc.matrix[key.replace(':', '_')] = collection;
+            });
+            res.render(type, doc);
+          }).catch(function(e) { console.log(e); });
         } else {
           res.render(type, doc);
         }

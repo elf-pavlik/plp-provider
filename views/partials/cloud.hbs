@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <h2 class="panel-heading">
+    <span class="glyphicon glyphicon-{{icon}}"></span>
+    {{name}}
+            <a class="more glyphicon glyphicon-arrow-right" href="{{id this}}"> </a>
+  </h2>
+  <ul class="panel-body" {{#if rel}} rel="{{rel}}" {{/if}} {{#if rev}} rev="{{rev}}" {{/if}}>
+    {{#each items}}
+    <li>
+      <a typeof="{{t this}}" href="{{id this}}">
+        {{#if name}}
+          <span property="name">{{name}}</span>
+        {{else}}
+          {{#if startTime}}
+            <span property="startTime">{{dt startTime}}</span>
+          {{/if}}
+        {{/if}}
+      </a>
+    </li>
+    {{/each}}
+  </ul>
+</div>

@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-  <title>{{author.name}} | worldwide elves</title>
+  <title>{{resource.name}} | worldwide elves</title>
 
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="{{name}}" />
@@ -31,12 +31,13 @@
 <div about="{{id}}" typeof="{{j type}}" class="container">
   <div class="row">
     <div id="main" class="col-md-3">
-      {{#if author}}
-        <h1 property="name">{{author.name}}</h1>
-        <img property="image" src="{{author.image}}" />
+      {{#if resource}}
+        <h1 property="name">{{resource.name}}</h1>
+        <img property="image" src="{{resource.image}}" />
       {{/if}}
     </div>
     <div class="col-md-9">
+      <h2>{{name}}</h2>
       {{#if items}}
         <ul rel="items" class="list-unstyled">
           {{#each items}}
