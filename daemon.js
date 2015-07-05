@@ -10,7 +10,6 @@ var hbs = require('hbs');
 var Promise = require('es6-promise').Promise;
 var _ = require('lodash');
 var UUID = require('uuid');
-var request = require('superagent');
 var level = require('level');
 var forkdb = require('forkdb');
 var levelgraph = require('levelgraph');
@@ -50,10 +49,12 @@ daemon.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 
 hbs.registerHelper('id', function(val){
+  //TODO remove id (without @)
   return val['@id'] || val.id;
 });
 
 hbs.registerHelper('t', function(val){
+  //TODO remove type (without @)
   if(!val.type && val['@type']) val.type = val['@type'];
   if(val.type && val.type.join){
     return val.type.join(" ");
@@ -200,8 +201,8 @@ daemon.post('/', function(req, res){
   .then(function(profile){
     var min = {
       "@context": profile["@context"], //TODO handle when no context
-      "id": profile.id,
-      "type": profile.type
+      "@id": profile.id,
+      "@type": profile.type
     };
     res.type('application/ld+json');
     res.send(min);
