@@ -16,7 +16,6 @@ var levelgraph = require('levelgraph');
 var rdf = require('rdf-ext')();
 
 var Errors = require('./lib/errors');
-var Persona = require('./lib/persona');
 var Authorization = require('./lib/authorization');
 var Verification = require('./lib/verification');
 var ForkdbStore = require('./lib/forkdbStore');
@@ -31,7 +30,7 @@ daemon.options('*', cors());
 daemon.use(bodyParser.json({ type: 'application/json' }));
 daemon.use(bodyParser.json({ type: 'application/ld+json' }));
 
-daemon.use(restricted(expressJwt({ secret: config.secrets.jwt, userProperty: 'agent'})));
+daemon.use(restricted(expressJwt({ secret: config.secrets.jwt, userProperty: 'token'})));
 daemon.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.send(401, 'authentication required');
@@ -89,79 +88,28 @@ daemon.get('/favicon.ico', function(req, res){
  * http://en.wikipedia.org/wiki/HTTPRange-14#Use_of_HTTP_Status_Code_303_See_Other
  */
 
-daemon.get(/[^/]$/, function(req, res){
-  res.redirect(303, req.protocol + '://' + req.get('Host') + req.path + '/');
-});
+//daemon.get(/[^/]$/, function(req, res){
+  //res.redirect(303, req.protocol + '://' + req.get('Host') + req.path + '/');
+//});
 
 
-// TODO refactor storage to dataset.profiles and use LevelGraph
-var db = level('tmp/fork.db');
-var storage = new ForkdbStore(forkdb(db, { dir: 'tmp/data.blob' }));
+var dataStore = new ForkdbStore(forkdb(level('tmp/data.db'), { dir: 'tmp/data.blob' }));
+var authStore = new ForkdbStore(forkdb(level('tmp/auth.db'), { dir: 'tmp/auth.blob' }));
+var graph = levelgraph(process.env.NODE_ENV || 'tmp/' + UUID.v4());
 
-var authorization = new Authorization(levelgraph(process.env.NODE_ENV || 'tmp/' + UUID.v4()));
-var verification = new Verification(storage);
+var authorization = new Authorization(authStore, graph);
+var verification = new Verification(dataStore);
 
-
-daemon.post('/auth/login', function(req, res){
-
-  /*
-   * check audience
-   * https://developer.mozilla.org/en/Persona/Security_Considerations#Explicitly_specify_the_audience_parameter
-   */
-  if(_.contains(config.audiences, req.headers.origin)){
-
-    // persona verify
-    Persona.verify(req.body.assertion, req.headers.origin)
-    .then(function(verification){
-
-      // TODO generate UUID for logout
-      var agent = { email: verification.email };
-      var token = jwt.sign(agent, config.secrets.jwt, { expiresInMinutes: 60*5 });
-
-      res.json({ token: token });
-    })
-    .catch(function(err){
-      // TODO add error reporting
-      console.log(err);
-      res.send(500);
-    });
-  } else {
-    res.send(403);
-  }
-});
-
-daemon.post('/auth/logout', function(req, res){
-  // TODO
-  res.send(200);
-});
-
-daemon.get(/[/]$/, function(req, res){
-  storage.get(req.uri.replace(/\/$/, ''))          // -> doc
+daemon.get('/:path', function(req, res){
+  //FIXME deal with / vs. no /
+  dataStore.get(req.uri.replace(/\/$/, ''))          // -> doc
   .then(function(doc){
     res.format({
       'text/html': function(){
         var type = doc.type || doc['@type'];
         // handle case of array
         if(typeof type == 'object') type = type[0];
-        if(doc.resource) {
-          storage.get(doc.resource)
-          .then(function(sub){
-            doc.resource = sub;
-            res.render(type, doc);
-          });
-        } else if(doc.collection) {
-          Promise.all(doc.collection.map(storage.get))
-          .then(function(matrix){
-            doc.matrix = {};
-            _.each(matrix, function(collection){
-              var key = collection.rel || collection.rev;
-              doc.matrix[key.replace(':', '_')] = collection;
-            });
-            res.render(type, doc);
-          }).catch(function(e) { console.log(e); });
-        } else {
-          res.render(type, doc);
-        }
+        res.render(type, doc);
       },
       'text/turtle': function(){
         rdf.parseJsonLd(doc, function(graph, error) {
@@ -197,7 +145,7 @@ daemon.post('/', function(req, res){
   verification.new(req)        // -> req
   .then(generateId)            // -> req
   .then(authorization.create)  // -> doc
-  .then(storage.save)          // -> doc
+  .then(dataStore.create)      // -> doc
   .then(function(profile){
     var min = {
       "@context": profile["@context"], //TODO handle when no context
@@ -215,10 +163,10 @@ daemon.post('/', function(req, res){
 /**
  * authentication handled by express-jwt
  */
-daemon.put('/:uuid', function(req, res){
+daemon.put('/:path', function(req, res){
   authorize(req)               // -> req
   .then(verification.target)   // -> doc
-  .then(storage.save)          // -> doc
+  .then(dataStore.replace)     // -> doc
   .then(function(){
     res.send(200, 'updated!');
   })
@@ -231,10 +179,10 @@ daemon.put('/:uuid', function(req, res){
 /**
  * authentication handled by express-jwt
  */
-daemon.delete('/:uuid', function(req, res){
+daemon.delete('/:path', function(req, res){
   authorize(req)               // -> req
   .then(verification.exists)   // -> doc
-  .then(storage.delete)        // -> doc
+  .then(dataStore.delete)      // -> doc
   .then(authorization.delete)  // -> null
   .then(function(){
     res.send(204, 'deleted!');
@@ -253,7 +201,7 @@ module.exports = daemon;
  */
 function restricted(fn) {
   return function(req, res, next) {
-    if (req.method === 'GET' || req.method == 'HEAD' || req.path.match(/\/auth/)) {
+    if (req.method === 'GET' || req.method == 'HEAD') {
       next();
     } else {
       fn(req, res, next);
@@ -284,7 +232,7 @@ function authorize(req) {
   return new Promise(function(resolve, reject){
     authorization.get(req.uri)
     .then(function(auth) {
-      if(!auth || req.agent.email !== auth.object) reject(new Errors.Authorization());
+      if(!auth || req.token.email !== auth.object) reject(new Errors.Authorization());
       resolve(req);
     })
     .catch(reject);

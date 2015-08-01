@@ -101,62 +101,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
-      {{#if matrix.actor}}
-        {{#with matrix.actor}}
-          {{> cloud icon="flash"}}
-        {{/with}}
-      {{/if}}
-    </div>
-    <div class="col-md-4">
-      {{#if matrix.cco_interest}}
-        {{#with matrix.cco_interest}}
-          {{> cloud icon="tree-deciduous"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.foaf_currentProject}}
-        {{#with matrix.foaf_currentProject}}
-          {{> cloud icon="cog"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.task}}
-        {{#with matrix.task}}
-          {{> cloud icon="tasks"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.seeks}}
-        {{#with matrix.seeks}}
-          {{> cloud icon="gift"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.owns}}
-        {{#with matrix.owns}}
-          {{> cloud icon="briefcase"}}
-        {{/with}}
-      {{/if}}
-    </div>
-    <div class="col-md-5">
-      {{#if matrix.member}}
-        {{#with matrix.member}}
-          {{> cloud icon="asterisk"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.attendee}}
-        {{#with matrix.attendee}}
-          {{> cloud icon="calendar"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.visited}}
-        {{#with matrix.visited}}
-          {{> cloud icon="map-marker"}}
-        {{/with}}
-      {{/if}}
-      {{#if matrix.about}}
-        {{#with matrix.about}}
-          {{> cloud icon="record"}}
-        {{/with}}
-      {{/if}}
-    </div>
+    <ul>
+      {{#each collection}}
+      <li><a typeof="Collection" href="{{this}}">{{this}}</a></li>
+      {{/each}}
+    </ul>
   </div>
   <footer>
     powered by open source
