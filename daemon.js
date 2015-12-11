@@ -138,6 +138,14 @@ daemon.get('/:path', function(req, res){
   });
 });
 
+daemon.get('/:account/blog/:slug', function(req, res){
+  res.format({
+    'text/html': function(){
+      res.render('Article');
+    }
+  });
+});
+
 /**
  * authentication handled by express-jwt
  */
